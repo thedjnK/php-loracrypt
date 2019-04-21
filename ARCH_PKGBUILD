@@ -1,0 +1,42 @@
+pkgname=php-loracrypt
+pkgver=0.1
+pkgrel=1
+pkgdesc='LoRa Crypt PHP extension'
+url='https://github.com/thedjnK/php-loracrypt'
+license=('PHP')
+arch=('any')
+depends=('php')
+makedepends=('php' 'git')
+source=("git+https://github.com/thedjnK/php-loracrypt.git")
+backup=('etc/php/conf.d/loracrypt.ini')
+sha256sums=('SKIP')
+
+build() {
+  cd $srcdir/php-loracrypt
+
+  msg "Updating Git submodules..."
+  git submodule init
+  git submodule update
+
+  msg "Running phpize..."
+  phpize
+  ./configure --prefix=/usr
+
+  msg "Building extension..."
+  make
+}
+
+package() {
+  cd $srcdir/php-loracrypt
+  msg "Installing files..."
+  mkdir -p "$pkgdir"/{/usr/lib/php/modules,/etc/php/conf.d}
+  mkdir -p "$pkgdir"/usr/share/licenses/php-loracrypt
+
+  echo "extension=loracrypt.so" > "loracrypt.ini"
+
+  install -D -m755 modules/loracrypt.so ${pkgdir}/usr/lib/php/modules/loracrypt.so
+  install -D -m644 loracrypt.ini ${pkgdir}/etc/php/conf.d/loracrypt.ini
+  install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/php-loracrypt/LICENSE
+}
+
+

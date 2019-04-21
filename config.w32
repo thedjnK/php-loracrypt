@@ -1,0 +1,11 @@
+ARG_ENABLE("loracrypt", "whether to enable loracrypt support", "no");
+
+if (PHP_LORACRYPT != "no")
+{
+    EXTENSION("loracrypt", "php_lora.c");
+    ADD_SOURCE("aes.c");
+    ADD_SOURCE("cmac.c");
+    ADD_SOURCE("utilities.c");
+    ADD_SOURCE("LoRaMacCrypto.c");
+    ADD_SOURCE("hexString.c");
+}
